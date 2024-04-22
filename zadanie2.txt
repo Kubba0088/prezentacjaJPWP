@@ -1,0 +1,92 @@
+Zadanie 2. Rozdzielenie aplikacji Kivy na dwa pliki KV\
+
+Pełny Kod przed Podziałem:
+
+from kivy.app import App
+from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.lang import Builder
+
+# Definicja interfejsu użytkownika wewnątrz kodu Python
+KV = '''
+ScreenManager:
+    LoginForm:
+        name: 'login'
+    WelcomeScreen:
+        name: 'welcome'
+
+<LoginForm>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: [10, 50, 10, 50]
+        spacing: 10
+
+        Label:
+            text: 'Login'
+            size_hint_y: None
+            height: 40
+
+        TextInput:
+            id: login
+            size_hint_y: None
+            height: 40
+            hint_text: 'Username'
+
+        TextInput:
+            id: password
+            size_hint_y: None
+            height: 40
+            hint_text: 'Password'
+            password: True
+
+        Button:
+            text: 'Submit'
+            size_hint_y: None
+            height: 40
+            on_release: 
+                root.manager.transition.direction = 'left'
+                app.submit(login.text, password.text)
+
+<WelcomeScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: [10, 50, 10, 50]
+        spacing: 10
+
+        Label:
+            text: 'Welcome to the App!'
+            size_hint_y: None
+            height: 40
+
+        Button:
+            text: 'Log Out'
+            size_hint_y: None
+            height: 40
+            on_release:
+                root.manager.transition.direction = 'right'
+                root.manager.current = 'login'
+'''
+
+class LoginForm(Screen):
+    pass
+
+class WelcomeScreen(Screen):
+    pass
+
+class MainApp(App):
+    def build(self):
+        return Builder.load_string(KV)
+
+    def submit(self, username, password):
+        print(f"Username: {username}, Password: {password}")
+        self.root.current = 'welcome'
+
+if __name__ == "__main__":
+    MainApp().run()
+
+Zadanie:
+
+Cele ćwiczenia - zreorganizowanie powyższego kodu aplikacji, dzieląc definicje interfejsu użytkownika na dwa oddzielne pliki KV: login.kv dla ekranu logowania i welcomescreen.kv dla ekranu powitalnego. Następnie, zmodyfikuj plik main.py, aby prawidłowo wczytywał te nowe pliki.
+
+1. Utwórz plik login.kv zawierający definicję interfejsu dla LoginForm.
+2. Zrób to samo w pliku welwelcomescreen.kv
+2. Zmodyfikuj main.py, aby używał Builder.load_file() do wczytania tych nowych plików KV.
